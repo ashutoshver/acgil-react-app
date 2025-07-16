@@ -1,135 +1,104 @@
-import { Link, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { FiMenu, FiX } from "react-icons/fi";
-import logo from "../assets/logo.png";
-
-const navLinks = [
-  { path: "/", label: "Home" },
-  { path: "/about", label: "About Us" },
-  { path: "/services", label: "Services" },
-  { path: "/products", label: "Products" },
-  { path: "/contact", label: "Contact" },
-];
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
 const Header = () => {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const location = useLocation();
-  const isHomePage = location.pathname === "/";
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
-  const closeMobileMenu = () => setMobileMenuOpen(false);
-
-  //for changing the color on scrolling
-  const headerBg = !isHomePage 
-    ? "bg-white shadow-md py-2" 
-    : scrolled 
-      ? "bg-white shadow-md py-2" 
-      : "bg-transparent py-4";
-
-  const getTextColor = (path) => {
-    const isActive = location.pathname === path;
-    if (isActive) return "text-indigo-300";
-    
-    return !isHomePage 
-      ? "text-gray-700 hover:text-indigo-600" 
-      : scrolled 
-        ? "text-gray-700 hover:text-indigo-600" 
-        : "text-white hover:text-indigo-300";
-  };
-
-  const buttonColor = !isHomePage
-    ? "bg-indigo-600 hover:bg-indigo-700 text-white"
-    : scrolled
-      ? "bg-indigo-600 hover:bg-indigo-700 text-white"
-      : "bg-white hover:bg-gray-100 text-indigo-600";
-
-  const menuButtonColor = !isHomePage 
-    ? "text-gray-700" 
-    : scrolled 
-      ? "text-gray-700" 
-      : "text-white";
+  const navLinks = [
+    { name: 'Home', path: '/' },
+    { name: 'About Us', path: '/about' },
+    { name: 'Services', path: '/services' },
+    { name: 'Products', path: '/products' },
+    { name: 'Contact', path: '/contact' },
+  ];
 
   return (
-    <header className={`fixed w-full z-50 transition-all duration-300 ${headerBg}`}>
-      <div className="container mx-auto px-6 flex justify-between items-center">
-        <Link to="/" className="flex items-center" onClick={closeMobileMenu}>
-          {/* <img src={logo} alt="ACGIL Logo" className="h-10" /> */}
-          <h1 className={`transition-colors font-medium ${getTextColor()} font-extrabold text-4xl font-serif`}>ACGIL</h1>
-        </Link>
+    <motion.header 
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="bg-white shadow-sm sticky top-0 z-50"
+    >
+      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+        <motion.div 
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="flex items-center"
+        >
+          <Link to="/" className="text-2xl font-bold text-indigo-600">
+            ACGIL
+          </Link>
+        </motion.div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex space-x-8">
+        <nav className="hidden md:flex space-x-8 items-center">
           {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`transition-colors font-medium ${getTextColor(link.path)}`}
+            <motion.div
+              key={link.name}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              {link.label}
-            </Link>
+              <Link 
+                to={link.path} 
+                className="text-gray-700 hover:text-indigo-600 transition-colors duration-300"
+              >
+                {link.name}
+              </Link>
+            </motion.div>
           ))}
+          <motion.button
+            whileHover={{ scale: 1.05, boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.1)" }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors duration-300"
+          >
+            Get a Quote
+          </motion.button>
         </nav>
 
-        <Link
-          to="/contact"
-          className={`hidden md:block px-6 py-2 rounded-full font-medium transition-all transform hover:scale-105 ${buttonColor}`}
+        <button 
+          className="md:hidden focus:outline-none"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          Get a Quote
-        </Link>
-
-        {/* Mobile menu button */}
-        <button
-          className={`md:hidden focus:outline-none ${menuButtonColor}`}
-          onClick={toggleMobileMenu}
-          aria-label="Toggle menu"
-        >
-          {mobileMenuOpen ? (
-            <FiX className="w-6 h-6" />
-          ) : (
-            <FiMenu className="w-6 h-6" />
-          )}
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
         </button>
       </div>
 
-      {/* Mobile menu */}
-      <div
-        className={`md:hidden ${
-          mobileMenuOpen ? "block" : "hidden"
-        } bg-white shadow-lg transition-all duration-300`}
-      >
-        <div className="container mx-auto px-6 py-4 flex flex-col space-y-4">
-          {navLinks.map((link) => {
-            const isActive = location.pathname === link.path;
-            return (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`${
-                  isActive ? "text-indigo-600" : "text-gray-700"
-                } hover:text-indigo-600 transition-colors font-medium py-2`}
-                onClick={closeMobileMenu}
+      {isMenuOpen && (
+        <motion.div 
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          className="md:hidden bg-white px-4 pb-4"
+        >
+          <div className="flex flex-col space-y-3">
+            {navLinks.map((link) => (
+              <motion.div
+                key={link.name}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
-                {link.label}
-              </Link>
-            );
-          })}
-          <Link
-            to="/contact"
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-full font-medium transition-all transform hover:scale-105 text-center"
-            onClick={closeMobileMenu}
-          >
-            Get a Quote
-          </Link>
-        </div>
-      </div>
-    </header>
+                <Link 
+                  to={link.path} 
+                  className="block py-2 text-gray-700 hover:text-indigo-600"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {link.name}
+                </Link>
+              </motion.div>
+            ))}
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 w-full"
+            >
+              Get a Quote
+            </motion.button>
+          </div>
+        </motion.div>
+      )}
+    </motion.header>
   );
 };
 

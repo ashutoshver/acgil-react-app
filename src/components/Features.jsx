@@ -1,54 +1,81 @@
-import feature1 from '../assets/customSolution.jpeg';
-import feature2 from '../assets/expertConsulting.jpeg';
-import feature3 from '../assets/InitiativeChallenge.jpeg';
-import feature4 from '../assets/ItConsulting.jpeg';
+import { motion } from "framer-motion";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBolt, faServer, faChartBar } from '@fortawesome/free-solid-svg-icons';
+import { FaCode } from "react-icons/fa";
 
 const Features = () => {
-  const features = [
-    {
-      icon: feature1,
-      title: "Custom Solutions",
-      description: "Tailored technology solutions designed specifically for your business needs and growth objectives."
-    },
-    {
-      icon: feature2,
-      title: "Expert Consulting",
-      description: "Strategic guidance from industry experts to help you navigate digital transformation."
-    },
-    {
-      icon: feature3,
-      title: "Innovative Technology",
-      description: "Leveraging cutting-edge technologies to give your business a competitive advantage."
-    },
-    {
-      icon: feature4,
-      title: "IT Consulting",
-      description: "Leveraging cutting-edge technologies to give your business a competitive advantage."
-    }
-  ];
+ const features = [
+  {
+    icon: <FontAwesomeIcon icon={faBolt} className="w-12 h-12 text-indigo-600" />,
+    title: "Fast Performance",
+    description:
+      "Optimized solutions that deliver blazing fast performance for your business needs.",
+  },
+  {
+    icon: <FaCode className="w-12 h-12 text-indigo-600" />,
+    title: "Custom Development",
+    description:
+      "Tailored software solutions designed specifically for your unique requirements.",
+  },
+  {
+    icon: <FontAwesomeIcon icon={faServer} className="w-12 h-12 text-indigo-600" />,
+    title: "Cloud Solutions",
+    description:
+      "Scalable and secure cloud infrastructure to power your business growth.",
+  },
+  {
+    icon: <FontAwesomeIcon icon={faChartBar} className="w-12 h-12 text-indigo-600" />,
+    title: "Data Analytics",
+    description:
+      "Actionable insights derived from your data to drive business decisions.",
+  },
+];
+
 
   return (
     <section className="py-20 bg-gray-50">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Our Core Services</h2>
+      <div className="container mx-auto px-4">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+            Our Core Services
+          </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Delivering excellence through innovative solutions and unparalleled expertise
+            Delivering exceptional solutions that drive your business forward
           </p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature, index) => (
-            <div 
+            <motion.div
               key={index}
-              className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 group"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              whileHover={{
+                y: -10,
+                boxShadow: "0px 10px 25px rgba(0, 0, 0, 0.1)",
+              }}
+              className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
             >
-              <div className="w-full h-50 mb-6 bg-indigo-50 rounded-full flex items-center justify-center group-hover:bg-indigo-100 transition-colors duration-300">
-                <img src={feature.icon} alt={feature.title} className="w-full h-50 rounded-sm" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-3">{feature.title}</h3>
+              <motion.div
+                className="mb-6"
+                whileHover={{ rotate: 10, scale: 1.1 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                {feature.icon}
+              </motion.div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-3">
+                {feature.title}
+              </h3>
               <p className="text-gray-600">{feature.description}</p>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
